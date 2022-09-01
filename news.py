@@ -5,7 +5,7 @@ import telebot
 from telebot import types
 import time
 
-bot = telebot.TeleBot('5784940404:AAE2FU1EOBHRAAMXV8f5K5mRfJxy_HXKElo');
+bot = telebot.TeleBot('');
 
 
 
