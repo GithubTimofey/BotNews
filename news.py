@@ -1,18 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
-<<<<<<< HEAD
 from aiogram import types, executor, Dispatcher, Bot
 TOKEN = '5784940404:AAE2FU1EOBHRAAMXV8f5K5mRfJxy_HXKElo'
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-=======
-import telebot 
-from telebot import types
-import time
 
-bot = telebot.TeleBot('');
->>>>>>> ad410a6171767c0a0db2aefc1b2502b533867ef9
 
 
 @dp.message_handler(commands=['start'])
@@ -31,8 +24,8 @@ async def start(message: types.Message):
 Три главные новости сразу из трех областей*'''.format(message.from_user),parse_mode='Markdown',reply_markup=markupreply)
     await bot.send_message(message.chat.id,'*Вы можете также выбрать один из вариантов (Новости IT, Новости Мир, Новости Крипта)*',reply_markup=arkupreply,parse_mode='Markdown')
 
-@dp.callback_query_handler(lambda call: call.data == '1')
-async def query_handler(call: types.CallbackQuery):
+@dp.callback_query_handler(lambda call: call.data)
+async def query_handler(call):
     now = datetime.datetime.now()
     url_eur = 'https://ria.ru/world/'
     response_eur = requests.get(url_eur)
@@ -56,7 +49,7 @@ async def query_handler(call: types.CallbackQuery):
     for i in quete_crypto:
         Crypto = i.find_all('div',class_='row news-item start-xs')[0]
     # bot.answer_callback_query(callback_query_id=call.id, text='Спасибо за честный ответ!')
-    await bot.edit_message_text(chat_id=call.message.chat.id,message_id = call.message.id, text='''
+    await bot.edit_message_text(chat_id=call.message.chat.id,message_id=call.message.message_id,text= '''
 *Дата: {0}*
 
 *Мир:*
