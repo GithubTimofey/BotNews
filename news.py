@@ -1,18 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
-<<<<<<< HEAD
 from aiogram import types, executor, Dispatcher, Bot
-TOKEN = '5784940404:AAE2FU1EOBHRAAMXV8f5K5mRfJxy_HXKElo'
+TOKEN = ''
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
-=======
-import telebot 
-from telebot import types
-import time
 
-bot = telebot.TeleBot('');
->>>>>>> ad410a6171767c0a0db2aefc1b2502b533867ef9
 
 
 @dp.message_handler(commands=['start'])
