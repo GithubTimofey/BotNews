@@ -1,17 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
-import telebot 
-from telebot import types
-import time
-
-bot = telebot.TeleBot('5784940404:AAE2FU1EOBHRAAMXV8f5K5mRfJxy_HXKElo');
-
+from aiogram import types, executor, Dispatcher, Bot
+TOKEN = '5784940404:AAE2FU1EOBHRAAMXV8f5K5mRfJxy_HXKElo'
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
 
 
-
-@bot.message_handler(commands=['start'])
-def start(message):
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
     arkupreply = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton("IT новости 💵")
     btn2 = types.KeyboardButton("World новости 🌍")
@@ -20,16 +17,15 @@ def start(message):
     rus = types.InlineKeyboardButton(text="Начать", callback_data="1")
     markupreply.add(rus)   
     arkupreply.add(btn1, btn2,btn3)
-    bot.send_message(message.chat.id,'''*Добрый день {0.first_name}*! *Меня зовут Джек 🤖.
+    await bot.send_message(message.chat.id,'''*Добрый день {0.first_name}*! *Меня зовут Джек 🤖.
 "Что я могу сделать ?" - Может быть, вы спросите меня.
 Собираю информацию из разных источников и передаю вам
 Три главные новости сразу из трех областей*'''.format(message.from_user),parse_mode='Markdown',reply_markup=markupreply)
-    bot.send_message(message.chat.id,'*Вы можете также выбрать один из вариантов (Новости IT, Новости Мир, Новости Крипта)*',reply_markup=arkupreply,parse_mode='Markdown')
+    await bot.send_message(message.chat.id,'*Вы можете также выбрать один из вариантов (Новости IT, Новости Мир, Новости Крипта)*',reply_markup=arkupreply,parse_mode='Markdown')
 
-@bot.callback_query_handler(func=lambda call: True)
-def query_handler(call):
+@dp.callback_query_handler(lambda call: call.data == '1')
+async def query_handler(call: types.CallbackQuery):
     now = datetime.datetime.now()
-
     url_eur = 'https://ria.ru/world/'
     response_eur = requests.get(url_eur)
     soup_eur = BeautifulSoup(response_eur.text,'lxml')
@@ -52,7 +48,7 @@ def query_handler(call):
     for i in quete_crypto:
         Crypto = i.find_all('div',class_='row news-item start-xs')[0]
     # bot.answer_callback_query(callback_query_id=call.id, text='Спасибо за честный ответ!')
-    bot.edit_message_text(chat_id=call.message.chat.id,message_id = call.message.id, text='''
+    await bot.edit_message_text(chat_id=call.message.chat.id,message_id = call.message.id, text='''
 *Дата: {0}*
 
 *Мир:*
@@ -67,8 +63,8 @@ def query_handler(call):
 '''.format(now.strftime('%d-%m-%Y'),News1,href,str(IT).partition('<span>')[2].partition('</span>')[0],'https://habr.com'+str(IT).partition('data-test-id="article-snippet-title-link" href="')[2].partition('"')[0],str(Crypto).partition('data-title="')[2].partition('"')[0],str(Crypto).partition('data-link="')[2].partition('"')[0]),parse_mode="Markdown")
 
 
-@bot.message_handler(content_types=['text'])
-def more(message):
+@dp.message_handler(content_types=['text'])
+async def more(message: types.Message):
     if (message.text == 'IT новости 💵'):
         url_hadr = 'https://habr.com/ru/news/'
         response_hadr = requests.get(url_hadr)
@@ -80,7 +76,7 @@ def more(message):
             IT2 = i.find_all('article')[2]
             IT3 = i.find_all('article')[3]
             IT4 = i.find_all('article')[4]
-        bot.send_message(message.chat.id,'''
+        await bot.send_message(message.chat.id,'''
 *1 Новость*
 [{0}]({1})
 
@@ -111,7 +107,7 @@ def more(message):
             href4 = i.find_all('a',class_='list-item__title color-font-hover-only')[3].get('href')
             News5 = i.find_all('a',class_='list-item__title color-font-hover-only')[4].text
             href5 = i.find_all('a',class_='list-item__title color-font-hover-only')[4].get('href')
-        bot.send_message(message.chat.id,'''
+        await bot.send_message(message.chat.id,'''
 *1 Новость*
 [{0}]({1})
 
@@ -143,7 +139,7 @@ def more(message):
             Crypto3 = i.find_all('div',class_='row news-item start-xs')[3]
             Crypto4 = i.find_all('div',class_='row news-item start-xs')[4]
 
-        bot.send_message(message.chat.id,'''
+        await bot.send_message(message.chat.id,'''
 *1 Новость*
 [{0}]({1})
 
@@ -159,9 +155,9 @@ def more(message):
 *5 Новость*
 [{8}]({9})
 '''.format(str(Crypto).partition('data-title="')[2].partition('"')[0],str(Crypto).partition('data-link="')[2].partition('"')[0],str(Crypto1).partition('data-title="')[2].partition('"')[0],str(Crypto1).partition('data-link="')[2].partition('"')[0],str(Crypto2).partition('data-title="')[2].partition('"')[0],str(Crypto2).partition('data-link="')[2].partition('"')[0],str(Crypto3).partition('data-title="')[2].partition('"')[0],str(Crypto3).partition('data-link="')[2].partition('"')[0],str(Crypto4).partition('data-title="')[2].partition('"')[0],str(Crypto4).partition('data-link="')[2].partition('"')[0]),parse_mode='Markdown')
-        bot.send_message(message.chat.id,'*Если хотите посмотреть подробные курсы криптовальт можете нажать на кнопку*',reply_markup=markupreply,parse_mode='Markdown')
+        await bot.send_message(message.chat.id,'*Если хотите посмотреть подробные курсы криптовальт можете нажать на кнопку*',reply_markup=markupreply,parse_mode='Markdown')
 def main():
-    bot.polling(non_stop=True,interval=0)
+    executor.start_polling(dp)
 
 if __name__ == '__main__':
     main()
