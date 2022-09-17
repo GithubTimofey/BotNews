@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 from aiogram import types, executor, Dispatcher, Bot
-TOKEN = '5784940404:AAE2FU1EOBHRAAMXV8f5K5mRfJxy_HXKElo'
+TOKEN = ''
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 
